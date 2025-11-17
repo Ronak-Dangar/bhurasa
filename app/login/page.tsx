@@ -6,6 +6,8 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import type { AuthChangeEvent } from "@supabase/supabase-js";
+import Image from "next/image";
+import BhurasaLogo from "@/public/BhurasaNoBg.png";
 
 export default function LoginPage() {
   const supabase = getSupabaseBrowserClient();
@@ -27,16 +29,24 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-50 to-zinc-100 px-4 dark:from-zinc-950 dark:to-emerald-950">
       <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-            Groundnut Oil OS
-          </h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Sign in to access your operating system
-          </p>
-        </div>
-
         <div className="rounded-xl border border-zinc-200 bg-white p-8 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
+          <Image
+            src={BhurasaLogo}
+            alt="Bhurasa Logo"
+            width={64}
+            height={64}
+            className="mx-auto mb-4"
+          />
+          
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+              Groundnut Oil OS
+            </h1>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              Sign in to access your operating system
+            </p>
+          </div>
+
           <Auth
             supabaseClient={supabase}
             appearance={{
@@ -47,6 +57,10 @@ export default function LoginPage() {
                     brand: "rgb(16 185 129)",
                     brandAccent: "rgb(5 150 105)",
                   },
+                  radii: {
+                    borderRadius: "0.5rem",
+                    inputBorderRadius: "0.5rem",
+                  },
                 },
               },
               className: {
@@ -56,7 +70,6 @@ export default function LoginPage() {
                 label: "block text-sm font-medium text-zinc-900 dark:text-zinc-100 mb-1",
               },
             }}
-            theme="light"
             providers={[]}
             view="sign_in"
             showLinks={false}
