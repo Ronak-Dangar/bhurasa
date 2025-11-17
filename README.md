@@ -19,6 +19,7 @@ This repository implements a specialised CRM + Manufacturing ERP to run a wood p
 - **Finance Snapshot**: Income vs expenses with COD receivables context and actionable margin levers.
 - **Supabase Schema**: SQL DDL + seed data, RLS policies for Super Admins and Delivery Agents, and `calculate_next_refill_date` helper.
 
+
 ## Local Development
 
 ```bash
