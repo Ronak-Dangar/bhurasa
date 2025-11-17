@@ -58,7 +58,7 @@ export default function LoginPage() {
                     brandAccent: "rgb(5 150 105)",
                   },
                   radii: {
-                    borderRadius: "0.5rem",
+                    buttonBorderRadius: "0.5rem",
                     inputBorderRadius: "0.5rem",
                   },
                 },
