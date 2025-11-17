@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Groundnut Oil Startup OS",
   description: "Command center for wood pressed groundnut oil operations",
   icons: {
-    icon: "/Bhurasa logo final.png",
+    icon: "/logo.png",
   },
 };
 
