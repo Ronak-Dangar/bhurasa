@@ -1,0 +1,18 @@
+{
+    "sourceFile": "next.config.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763136497225,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763136497225,
+            "name": "Commit-0",
+            "content": "import type { NextConfig } from \"next\";\n\nconst nextConfig: NextConfig = {\n  outputFileTracingRoot: require(\"path\").join(__dirname, \"./\"),\n};\n\nexport default nextConfig;\n"
+        }
+    ]
+}

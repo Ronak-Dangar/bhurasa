@@ -1,0 +1,18 @@
+{
+    "sourceFile": "components/layout/logout-button.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763151132702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763151132702,
+            "name": "Commit-0",
+            "content": "\"use client\";\r\n\r\nimport { LogOut } from \"lucide-react\";\r\nimport { getSupabaseBrowserClient } from \"@/lib/supabase/client\";\r\nimport { useRouter } from \"next/navigation\";\r\nimport { useState } from \"react\";\r\n\r\nexport function LogoutButton() {\r\n  const supabase = getSupabaseBrowserClient();\r\n  const router = useRouter();\r\n  const [isLoggingOut, setIsLoggingOut] = useState(false);\r\n\r\n  async function handleLogout() {\r\n    setIsLoggingOut(true);\r\n    await supabase.auth.signOut();\r\n    router.push(\"/login\");\r\n    router.refresh();\r\n  }\r\n\r\n  return (\r\n    <button\r\n      onClick={handleLogout}\r\n      disabled={isLoggingOut}\r\n      className=\"flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50 disabled:opacity-50 dark:text-rose-400 dark:hover:bg-rose-950/40\"\r\n    >\r\n      <LogOut size={18} />\r\n      {isLoggingOut ? \"Signing out...\" : \"Sign Out\"}\r\n    </button>\r\n  );\r\n}\r\n"
+        }
+    ]
+}

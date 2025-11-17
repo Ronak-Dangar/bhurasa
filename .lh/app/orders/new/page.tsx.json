@@ -1,0 +1,18 @@
+{
+    "sourceFile": "app/orders/new/page.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763069565217,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763069565217,
+            "name": "Commit-0",
+            "content": "import { CreateOrderForm } from \"@/components/orders/create-order-form\";\r\n\r\nexport default function NewOrderPage() {\r\n  return (\r\n    <div className=\"space-y-6\">\r\n      <div>\r\n        <h2 className=\"text-2xl font-semibold text-zinc-900 dark:text-zinc-100\">Sales Entry</h2>\r\n        <p className=\"mt-1 text-sm text-zinc-500 dark:text-zinc-400\">\r\n          Convert nurtured leads into orders and allocate delivery capacity.\r\n        </p>\r\n      </div>\r\n      <CreateOrderForm />\r\n    </div>\r\n  );\r\n}\r\n"
+        }
+    ]
+}

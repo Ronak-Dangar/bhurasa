@@ -1,0 +1,18 @@
+{
+    "sourceFile": "components/inventory/inventory-client-wrappers.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763362519345,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763362519345,
+            "name": "Commit-0",
+            "content": "\"use client\";\r\n\r\nimport { useState } from \"react\";\r\nimport { EditItemModal } from \"./edit-item-modal\";\r\nimport { StockMovementModal } from \"./stock-movement-modal\";\r\n\r\ninterface InventoryClientWrappersProps {\r\n  children: React.ReactNode;\r\n}\r\n\r\nexport function InventoryClientWrappers({ children }: InventoryClientWrappersProps) {\r\n  const [stockMovementOpen, setStockMovementOpen] = useState(false);\r\n\r\n  return (\r\n    <>\r\n      <div className=\"space-y-6\">\r\n        <div className=\"flex items-center justify-between\">\r\n          <div>\r\n            <h2 className=\"text-2xl font-semibold text-zinc-900 dark:text-zinc-100\">\r\n              Inventory Health\r\n            </h2>\r\n            <p className=\"mt-1 text-sm text-zinc-500 dark:text-zinc-400\">\r\n              Track stock across raw material, production flow, and finished goods.\r\n            </p>\r\n          </div>\r\n          <button\r\n            onClick={() => setStockMovementOpen(true)}\r\n            className=\"rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-500\"\r\n          >\r\n            + New Stock Movement\r\n          </button>\r\n        </div>\r\n\r\n        {children}\r\n      </div>\r\n\r\n      {stockMovementOpen && (\r\n        <StockMovementModal onClose={() => setStockMovementOpen(false)} />\r\n      )}\r\n    </>\r\n  );\r\n}\r\n\r\ninterface InventoryTableActionsProps {\r\n  item: any;\r\n}\r\n\r\nexport function InventoryTableActions({ item }: InventoryTableActionsProps) {\r\n  const [editOpen, setEditOpen] = useState(false);\r\n\r\n  return (\r\n    <>\r\n      <button\r\n        onClick={() => setEditOpen(true)}\r\n        className=\"rounded border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-200\"\r\n      >\r\n        Edit\r\n      </button>\r\n\r\n      {editOpen && (\r\n        <EditItemModal item={item} onClose={() => setEditOpen(false)} />\r\n      )}\r\n    </>\r\n  );\r\n}\r\n"
+        }
+    ]
+}

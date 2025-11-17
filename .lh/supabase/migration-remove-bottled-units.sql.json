@@ -1,0 +1,22 @@
+{
+    "sourceFile": "supabase/migration-remove-bottled-units.sql",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763364745316,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763368650316,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,26 @@\n--- Migration: Remove bottled_units column and update phase constraint\r\n--- This migration supports the decoupling of bottling from production workflow\r\n+-- Migration: Fix and Decouple Production/Bottling\r\n+-- Fixes the check constraint violation by running\r\n+-- data updates *before* applying new constraints.\r\n \r\n--- 1. Remove the bottled_units column (no longer needed)\r\n+-- 1. Remove the old constraint (if it exists)\r\n ALTER TABLE public.production_batches\r\n-DROP COLUMN IF EXISTS bottled_units;\r\n-\r\n--- 2. Update the phase constraint to include 'completed' instead of 'bottling'\r\n-ALTER TABLE public.production_batches\r\n DROP CONSTRAINT IF EXISTS production_batches_phase_check;\r\n \r\n+-- 2. (FIX) Migrate any existing 'bottling' phase\r\n+-- batches to 'completed'. This is the step\r\n+-- that was out of order.\r\n+UPDATE public.production_batches\r\n+SET phase = 'completed'\r\n+WHERE phase = 'bottling';\r\n+\r\n+-- 3. (NEW) Now that the data is clean,\r\n+-- add the new, stricter constraint.\r\n ALTER TABLE public.production_batches\r\n ADD CONSTRAINT production_batches_phase_check \r\n CHECK (phase IN ('dehusking', 'pressing', 'completed'));\r\n \r\n--- 3. Migrate any existing 'bottling' phase batches to 'completed'\r\n-UPDATE public.production_batches\r\n-SET phase = 'completed'\r\n-WHERE phase = 'bottling';\r\n+-- 4. Remove the bottled_units column (no longer needed)\r\n+ALTER TABLE public.production_batches\r\n+DROP COLUMN IF EXISTS bottled_units;\r\n \r\n--- Note: This migration is safe to run multiple times (idempotent)\r\n+-- Note: This corrected script is safe to run.\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1763364745316,
+            "name": "Commit-0",
+            "content": "-- Migration: Remove bottled_units column and update phase constraint\r\n-- This migration supports the decoupling of bottling from production workflow\r\n\r\n-- 1. Remove the bottled_units column (no longer needed)\r\nALTER TABLE public.production_batches\r\nDROP COLUMN IF EXISTS bottled_units;\r\n\r\n-- 2. Update the phase constraint to include 'completed' instead of 'bottling'\r\nALTER TABLE public.production_batches\r\nDROP CONSTRAINT IF EXISTS production_batches_phase_check;\r\n\r\nALTER TABLE public.production_batches\r\nADD CONSTRAINT production_batches_phase_check \r\nCHECK (phase IN ('dehusking', 'pressing', 'completed'));\r\n\r\n-- 3. Migrate any existing 'bottling' phase batches to 'completed'\r\nUPDATE public.production_batches\r\nSET phase = 'completed'\r\nWHERE phase = 'bottling';\r\n\r\n-- Note: This migration is safe to run multiple times (idempotent)\r\n"
+        }
+    ]
+}

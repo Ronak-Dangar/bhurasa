@@ -1,0 +1,18 @@
+{
+    "sourceFile": "components/ui/badge.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763069565215,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763069565215,
+            "name": "Commit-0",
+            "content": "import { cn } from \"@/lib/utils\";\r\n\r\nconst variants: Record<string, string> = {\r\n  default: \"bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300\",\r\n  success: \"bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300\",\r\n  warning: \"bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-300\",\r\n  danger: \"bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200\",\r\n  info: \"bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200\",\r\n  neutral: \"bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200\",\r\n};\r\n\r\ninterface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {\r\n  variant?: keyof typeof variants;\r\n}\r\n\r\nexport function Badge({ className, variant = \"default\", ...props }: BadgeProps) {\r\n  return (\r\n    <span\r\n      className={cn(\r\n        \"inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium uppercase tracking-wide\",\r\n        variants[variant],\r\n        className,\r\n      )}\r\n      {...props}\r\n    />\r\n  );\r\n}\r\n"
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "components/layout/nav-links.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1763069565215,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763302950126,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n \"use client\";\r\n \r\n import Link from \"next/link\";\r\n import { usePathname } from \"next/navigation\";\r\n-import { LucideIcon, Home, PackageSearch, Factory, ClipboardPlus, Navigation2, PiggyBank } from \"lucide-react\";\r\n+import { LucideIcon, Home, PackageSearch, Factory, ClipboardPlus, Navigation2, PiggyBank, Users } from \"lucide-react\";\r\n import { cn } from \"@/lib/utils\";\r\n \r\n interface NavLink {\r\n   label: string;\r\n@@ -12,8 +12,9 @@\n }\r\n \r\n const links: NavLink[] = [\r\n   { label: \"Command Center\", href: \"/\", icon: Home },\r\n+  { label: \"Customers\", href: \"/dashboard/customers\", icon: Users },\r\n   { label: \"Inventory\", href: \"/inventory\", icon: PackageSearch },\r\n   { label: \"Production\", href: \"/production\", icon: Factory },\r\n   { label: \"New Order\", href: \"/orders/new\", icon: ClipboardPlus },\r\n   { label: \"Delivery Board\", href: \"/delivery\", icon: Navigation2 },\r\n@@ -25,9 +26,9 @@\n \r\n   return (\r\n     <nav className=\"mt-6 space-y-1\">\r\n       {links.map((link) => {\r\n-        const isActive = pathname === link.href;\r\n+        const isActive = link.href === \"/\" ? pathname === \"/\" : pathname.startsWith(link.href);\r\n         const Icon = link.icon;\r\n         return (\r\n           <Link\r\n             key={link.href}\r\n"
+                },
+                {
+                    "date": 1763364745322,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n \"use client\";\r\n \r\n import Link from \"next/link\";\r\n import { usePathname } from \"next/navigation\";\r\n-import { LucideIcon, Home, PackageSearch, Factory, ClipboardPlus, Navigation2, PiggyBank, Users } from \"lucide-react\";\r\n+import { LucideIcon, Home, PackageSearch, Factory, ClipboardPlus, Navigation2, PiggyBank, Users, Droplet } from \"lucide-react\";\r\n import { cn } from \"@/lib/utils\";\r\n \r\n interface NavLink {\r\n   label: string;\r\n@@ -15,8 +15,9 @@\n   { label: \"Command Center\", href: \"/\", icon: Home },\r\n   { label: \"Customers\", href: \"/dashboard/customers\", icon: Users },\r\n   { label: \"Inventory\", href: \"/inventory\", icon: PackageSearch },\r\n   { label: \"Production\", href: \"/production\", icon: Factory },\r\n+  { label: \"Bottling\", href: \"/bottling\", icon: Droplet },\r\n   { label: \"New Order\", href: \"/orders/new\", icon: ClipboardPlus },\r\n   { label: \"Delivery Board\", href: \"/delivery\", icon: Navigation2 },\r\n   { label: \"Finance\", href: \"/finance\", icon: PiggyBank },\r\n ];\r\n"
+                }
+            ],
+            "date": 1763069565215,
+            "name": "Commit-0",
+            "content": "\"use client\";\r\n\r\nimport Link from \"next/link\";\r\nimport { usePathname } from \"next/navigation\";\r\nimport { LucideIcon, Home, PackageSearch, Factory, ClipboardPlus, Navigation2, PiggyBank } from \"lucide-react\";\r\nimport { cn } from \"@/lib/utils\";\r\n\r\ninterface NavLink {\r\n  label: string;\r\n  href: string;\r\n  icon: LucideIcon;\r\n}\r\n\r\nconst links: NavLink[] = [\r\n  { label: \"Command Center\", href: \"/\", icon: Home },\r\n  { label: \"Inventory\", href: \"/inventory\", icon: PackageSearch },\r\n  { label: \"Production\", href: \"/production\", icon: Factory },\r\n  { label: \"New Order\", href: \"/orders/new\", icon: ClipboardPlus },\r\n  { label: \"Delivery Board\", href: \"/delivery\", icon: Navigation2 },\r\n  { label: \"Finance\", href: \"/finance\", icon: PiggyBank },\r\n];\r\n\r\nexport function NavLinks({ onNavigate }: { onNavigate?: () => void }) {\r\n  const pathname = usePathname();\r\n\r\n  return (\r\n    <nav className=\"mt-6 space-y-1\">\r\n      {links.map((link) => {\r\n        const isActive = pathname === link.href;\r\n        const Icon = link.icon;\r\n        return (\r\n          <Link\r\n            key={link.href}\r\n            href={link.href}\r\n            onClick={onNavigate}\r\n            className={cn(\r\n              \"flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition\",\r\n              isActive\r\n                ? \"bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300\"\r\n                : \"text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100\",\r\n            )}\r\n          >\r\n            <Icon size={18} />\r\n            {link.label}\r\n          </Link>\r\n        );\r\n      })}\r\n    </nav>\r\n  );\r\n}\r\n"
+        }
+    ]
+}

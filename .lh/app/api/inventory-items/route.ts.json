@@ -1,0 +1,18 @@
+{
+    "sourceFile": "app/api/inventory-items/route.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763363343212,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763363343212,
+            "name": "Commit-0",
+            "content": "import { createSupabaseServerClient } from \"@/lib/supabase/server\";\r\nimport { NextResponse } from \"next/server\";\r\n\r\nexport async function GET() {\r\n  const supabase = await createSupabaseServerClient();\r\n\r\n  const { data: items, error } = await supabase\r\n    .from(\"inventory_items\")\r\n    .select(\"id, item_name, stock_level, unit, avg_cost\")\r\n    .order(\"item_name\", { ascending: true });\r\n\r\n  if (error) {\r\n    return NextResponse.json({ error: error.message }, { status: 500 });\r\n  }\r\n\r\n  return NextResponse.json({ items: items ?? [] });\r\n}\r\n"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "app/layout.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763069565216,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763069565216,
+            "name": "Commit-0",
+            "content": "import type { Metadata } from \"next\";\nimport { Geist, Geist_Mono } from \"next/font/google\";\nimport \"./globals.css\";\nimport { AppShell } from \"@/components/layout/app-shell\";\n\nconst geistSans = Geist({\n  variable: \"--font-geist-sans\",\n  subsets: [\"latin\"],\n});\n\nconst geistMono = Geist_Mono({\n  variable: \"--font-geist-mono\",\n  subsets: [\"latin\"],\n});\n\nexport const metadata: Metadata = {\n  title: \"Groundnut Oil Startup OS\",\n  description: \"Command center for wood pressed groundnut oil operations\",\n};\n\nexport default function RootLayout({\n  children,\n}: Readonly<{\n  children: React.ReactNode;\n}>) {\n  return (\n    <html lang=\"en\">\n      <body\n        className={`${geistSans.variable} ${geistMono.variable} antialiased`}\n      >\n        <AppShell>{children}</AppShell>\n      </body>\n    </html>\n  );\n}\n"
+        }
+    ]
+}

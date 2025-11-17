@@ -1,0 +1,22 @@
+{
+    "sourceFile": "components/ui/card.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763069565215,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763362519373,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { cn } from \"@/lib/utils\";\r\n \r\n-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {\r\n-  title?: string;\r\n+interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {\r\n+  title?: string | React.ReactNode;\r\n   description?: string;\r\n   actions?: React.ReactNode;\r\n }\r\n \r\n"
+                }
+            ],
+            "date": 1763069565215,
+            "name": "Commit-0",
+            "content": "import { cn } from \"@/lib/utils\";\r\n\r\ninterface CardProps extends React.HTMLAttributes<HTMLDivElement> {\r\n  title?: string;\r\n  description?: string;\r\n  actions?: React.ReactNode;\r\n}\r\n\r\nexport function Card({\r\n  children,\r\n  className,\r\n  title,\r\n  description,\r\n  actions,\r\n  ...props\r\n}: CardProps) {\r\n  return (\r\n    <div\r\n      className={cn(\r\n        \"rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900\",\r\n        className,\r\n      )}\r\n      {...props}\r\n    >\r\n      {(title || description || actions) && (\r\n        <div className=\"mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between\">\r\n          <div>\r\n            {title && (\r\n              <h3 className=\"text-lg font-semibold text-zinc-900 dark:text-zinc-100\">\r\n                {title}\r\n              </h3>\r\n            )}\r\n            {description && (\r\n              <p className=\"text-sm text-zinc-500 dark:text-zinc-400\">{description}</p>\r\n            )}\r\n          </div>\r\n          {actions && <div className=\"flex items-center gap-2\">{actions}</div>}\r\n        </div>\r\n      )}\r\n      {children}\r\n    </div>\r\n  );\r\n}\r\n"
+        }
+    ]
+}

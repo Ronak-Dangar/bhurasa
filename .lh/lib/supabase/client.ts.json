@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/supabase/client.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763069565216,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763302823015,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,4 +13,7 @@\n   }\r\n \r\n   return browserClient;\r\n }\r\n+\r\n+// Alias for compatibility\r\n+export const createSupabaseClient = getSupabaseBrowserClient;\r\n"
+                }
+            ],
+            "date": 1763069565216,
+            "name": "Commit-0",
+            "content": "\"use client\";\r\n\r\nimport { createBrowserClient } from \"@supabase/ssr\";\r\n\r\nlet browserClient: ReturnType<typeof createBrowserClient> | null = null;\r\n\r\nexport function getSupabaseBrowserClient() {\r\n  if (!browserClient) {\r\n    browserClient = createBrowserClient(\r\n      process.env.NEXT_PUBLIC_SUPABASE_URL!,\r\n      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,\r\n    );\r\n  }\r\n\r\n  return browserClient;\r\n}\r\n"
+        }
+    ]
+}
