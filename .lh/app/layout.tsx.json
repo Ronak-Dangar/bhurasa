@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1763069565216,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763371183625,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,8 +15,11 @@\n \n export const metadata: Metadata = {\n   title: \"Groundnut Oil Startup OS\",\n   description: \"Command center for wood pressed groundnut oil operations\",\n+  icons: {\n+    icon: \"/Bhurasa logo final.png\",\n+  },\n };\n \n export default function RootLayout({\n   children,\n"
                 }
             ],
             "date": 1763069565216,
