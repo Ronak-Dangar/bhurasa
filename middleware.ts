@@ -27,21 +27,13 @@ function clearSessionAndRedirect(request: NextRequest): NextResponse {
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const requestUrl = new URL(request.url);
-  const isLoginPage = requestUrl.pathname.startsWith("/login");
+  const isLoginPage = path.startsWith("/login");
 
   // Create a response we can modify
   let supabaseResponse = NextResponse.next({ request });
 
   // ─────────────────────────────────────────────────────────────
-  // SKIP AUTH CHECK FOR LOGIN PAGE (avoid session missing errors)
-  // ─────────────────────────────────────────────────────────────
-  if (isLoginPage) {
-    return supabaseResponse;
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // CREATE SUPABASE CLIENT (only for non-login pages)
+  // INITIALIZE SUPABASE CLIENT (always, for all routes)
   // ─────────────────────────────────────────────────────────────
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,16 +57,35 @@ export async function middleware(request: NextRequest) {
   );
 
   // ─────────────────────────────────────────────────────────────
-  // AUTH CHECK with error handling to break infinite loop
+  // CHECK AUTHENTICATION (for all routes)
   // ─────────────────────────────────────────────────────────────
   let user = null;
 
   try {
     const { data, error } = await supabase.auth.getUser();
 
-    // If there's an auth error (invalid/expired refresh token), clear session
+    // If there's an auth error (invalid/expired refresh token)
     if (error) {
       console.warn("[Middleware] Auth error:", error.message);
+      
+      // On login page: just clear cookies and allow through (no redirect)
+      if (isLoginPage) {
+        const response = NextResponse.next({ request });
+        const cookiesToClear = request.cookies
+          .getAll()
+          .filter(
+            (c) =>
+              c.name.startsWith("sb-") ||
+              c.name.includes("supabase") ||
+              c.name.includes("auth")
+          );
+        for (const cookie of cookiesToClear) {
+          response.cookies.delete(cookie.name);
+        }
+        return response;
+      }
+      
+      // On other pages: clear session and redirect to login
       return clearSessionAndRedirect(request);
     }
 
@@ -82,14 +93,42 @@ export async function middleware(request: NextRequest) {
   } catch (err) {
     // Unexpected error - clear session to be safe
     console.error("[Middleware] Unexpected auth error:", err);
+    
+    // On login page: clear cookies and allow through
+    if (isLoginPage) {
+      const response = NextResponse.next({ request });
+      const cookiesToClear = request.cookies
+        .getAll()
+        .filter(
+          (c) =>
+            c.name.startsWith("sb-") ||
+            c.name.includes("supabase") ||
+            c.name.includes("auth")
+        );
+      for (const cookie of cookiesToClear) {
+        response.cookies.delete(cookie.name);
+      }
+      return response;
+    }
+    
     return clearSessionAndRedirect(request);
   }
 
   // ─────────────────────────────────────────────────────────────
-  // ROUTE PROTECTION
+  // HANDLE LOGIN PAGE
   // ─────────────────────────────────────────────────────────────
+  if (isLoginPage) {
+    // If user is already logged in, redirect to dashboard
+    if (user) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    // If not logged in, allow them to see the login form
+    return supabaseResponse;
+  }
 
-  // All routes require authentication (login is already handled above)
+  // ─────────────────────────────────────────────────────────────
+  // HANDLE PROTECTED ROUTES (all non-login pages require auth)
+  // ─────────────────────────────────────────────────────────────
   if (!user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

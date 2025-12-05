@@ -72,10 +72,31 @@ export async function addExpense(formData: FormData) {
 
   const expenseType = formData.get("expense_type") as string;
   const amount = parseFloat(formData.get("amount") as string);
-  const inventoryItemId = formData.get("inventory_item_id") as string | null;
+  let inventoryItemId = formData.get("inventory_item_id") as string | null;
   const procurementQuantity = formData.get("procurement_quantity")
     ? parseFloat(formData.get("procurement_quantity") as string)
     : null;
+
+  // ──────────────────────────────────────────────────────────
+  // AUTO-LOOKUP: For purchase_groundnuts, find groundnut item
+  // ──────────────────────────────────────────────────────────
+  if (expenseType === "purchase_groundnuts") {
+    const { data: groundnutItem } = await supabase
+      .from("inventory_items")
+      .select("id")
+      .or("item_name.ilike.%groundnut%,item_name.ilike.%groundnuts%")
+      .limit(1)
+      .single();
+
+    if (groundnutItem) {
+      inventoryItemId = groundnutItem.id;
+    } else {
+      return {
+        success: false,
+        error: "Groundnut inventory item not found. Please add it to inventory first.",
+      };
+    }
+  }
 
   const expense = {
     expense_type: expenseType,
@@ -94,7 +115,9 @@ export async function addExpense(formData: FormData) {
 
   // Step 2: ERP Bridge - Update inventory if procurement
   let inventoryUpdate = null;
-  if (inventoryItemId && procurementQuantity && procurementQuantity > 0) {
+  const isProcurement = expenseType === "purchase_groundnuts" || expenseType === "purchase_packaging";
+  
+  if (isProcurement && inventoryItemId && procurementQuantity && procurementQuantity > 0) {
     try {
       inventoryUpdate = await updateInventoryFromPurchase(
         inventoryItemId,
@@ -116,9 +139,7 @@ export async function addExpense(formData: FormData) {
   return {
     success: true,
     message: inventoryUpdate
-      ? `Expense logged. Inventory updated: ${inventoryUpdate.itemName} ${inventoryUpdate.oldStock} → ${inventoryUpdate.newStock} ${
-          inventoryUpdate.oldAvgCost.toFixed(2)
-        } → ₹${inventoryUpdate.newAvgCost.toFixed(2)}`
+      ? `Expense logged. Inventory updated: ${inventoryUpdate.itemName} ${inventoryUpdate.oldStock} → ${inventoryUpdate.newStock} (Avg: ₹${inventoryUpdate.oldAvgCost.toFixed(2)} → ₹${inventoryUpdate.newAvgCost.toFixed(2)})`
       : "Expense logged successfully",
   };
 }

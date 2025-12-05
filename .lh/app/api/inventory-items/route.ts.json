@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1763363343212,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764958513246,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,26 @@\n import { createSupabaseServerClient } from \"@/lib/supabase/server\";\r\n-import { NextResponse } from \"next/server\";\r\n+import { NextRequest, NextResponse } from \"next/server\";\r\n \r\n-export async function GET() {\r\n+export async function GET(request: NextRequest) {\r\n   const supabase = await createSupabaseServerClient();\r\n+  \r\n+  // Support filtering by item_type (e.g., ?type=packaging)\r\n+  const searchParams = request.nextUrl.searchParams;\r\n+  const itemType = searchParams.get(\"type\");\r\n \r\n-  const { data: items, error } = await supabase\r\n+  let query = supabase\r\n     .from(\"inventory_items\")\r\n-    .select(\"id, item_name, stock_level, unit, avg_cost\")\r\n+    .select(\"id, item_name, stock_level, unit, avg_cost, item_type\")\r\n     .order(\"item_name\", { ascending: true });\r\n \r\n+  // Filter by item_type if provided\r\n+  if (itemType) {\r\n+    query = query.eq(\"item_type\", itemType);\r\n+  }\r\n+\r\n+  const { data: items, error } = await query;\r\n+\r\n   if (error) {\r\n     return NextResponse.json({ error: error.message }, { status: 500 });\r\n   }\r\n \r\n"
                 }
             ],
             "date": 1763363343212,
