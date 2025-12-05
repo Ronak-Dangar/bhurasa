@@ -1,12 +1,48 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+/**
+ * Clears all Supabase auth cookies and redirects to login.
+ * This breaks the infinite refresh-token retry loop.
+ */
+function clearSessionAndRedirect(request: NextRequest): NextResponse {
+  const response = NextResponse.redirect(new URL("/login", request.url));
 
-  // Create client with anon key for auth check
+  // Delete all Supabase auth cookies to force a clean slate
+  const cookiesToClear = request.cookies
+    .getAll()
+    .filter(
+      (c) =>
+        c.name.startsWith("sb-") ||
+        c.name.includes("supabase") ||
+        c.name.includes("auth")
+    );
+
+  for (const cookie of cookiesToClear) {
+    response.cookies.delete(cookie.name);
+  }
+
+  return response;
+}
+
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  const requestUrl = new URL(request.url);
+  const isLoginPage = requestUrl.pathname.startsWith("/login");
+
+  // Create a response we can modify
+  let supabaseResponse = NextResponse.next({ request });
+
+  // ─────────────────────────────────────────────────────────────
+  // SKIP AUTH CHECK FOR LOGIN PAGE (avoid session missing errors)
+  // ─────────────────────────────────────────────────────────────
+  if (isLoginPage) {
+    return supabaseResponse;
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // CREATE SUPABASE CLIENT (only for non-login pages)
+  // ─────────────────────────────────────────────────────────────
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -16,12 +52,10 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -29,6 +63,40 @@ export async function middleware(request: NextRequest) {
       },
     }
   );
+
+  // ─────────────────────────────────────────────────────────────
+  // AUTH CHECK with error handling to break infinite loop
+  // ─────────────────────────────────────────────────────────────
+  let user = null;
+
+  try {
+    const { data, error } = await supabase.auth.getUser();
+
+    // If there's an auth error (invalid/expired refresh token), clear session
+    if (error) {
+      console.warn("[Middleware] Auth error:", error.message);
+      return clearSessionAndRedirect(request);
+    }
+
+    user = data.user;
+  } catch (err) {
+    // Unexpected error - clear session to be safe
+    console.error("[Middleware] Unexpected auth error:", err);
+    return clearSessionAndRedirect(request);
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // ROUTE PROTECTION
+  // ─────────────────────────────────────────────────────────────
+
+  // All routes require authentication (login is already handled above)
+  if (!user) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // ROLE-BASED ACCESS CONTROL
+  // ─────────────────────────────────────────────────────────────
 
   // Create service role client for profile lookup (bypasses RLS)
   const supabaseAdmin = createServerClient(
@@ -39,58 +107,29 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
+        setAll() {
+          // No-op for admin client
         },
       },
     }
   );
 
-  // Get user session
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: profile } = await supabaseAdmin
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
 
-  // Allow access to login page without authentication
-  if (request.nextUrl.pathname === "/login") {
-    // If user is already logged in, redirect to home
-    if (user) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-    return supabaseResponse;
-  }
-
-  // Protect all other routes - require authentication
-  if (!user) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  // Fetch user role from profiles table using service role to bypass RLS
-const { data: profile, error, status } = await supabaseAdmin
-  .from("profiles")
-  .select("role")
-  .eq("id", user.id)
-  .single();
-
-console.log("profile", profile, "error", error, "status", status);
-
-  // Default to delivery_agent if profile doesn't exist or has no role
-  // In production, you should create profiles for all users manually
+  // Default to delivery_agent if profile doesn't exist
   const userRole = profile?.role || "delivery_agent";
 
-  // Role-based access control
-  const path = request.nextUrl.pathname;
-
-  // Admin-only routes: /, /finance, /production, /inventory, /orders
+  // Admin-only routes
   const adminRoutes = ["/", "/finance", "/production", "/inventory", "/orders"];
   const isAdminRoute = adminRoutes.some(
     (route) => path === route || path.startsWith(`${route}/`)
   );
 
   if (isAdminRoute && userRole !== "super_admin") {
-    // Redirect delivery agents to their dashboard
     return NextResponse.redirect(new URL("/delivery", request.url));
   }
 
@@ -100,12 +139,13 @@ console.log("profile", profile, "error", error, "status", status);
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
+     * Match all request paths EXCEPT:
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
+     * - favicon.ico, logo.png (favicon/logo)
+     * - images: .svg, .png, .jpg, .jpeg, .gif, .webp, .ico
+     * - api routes that don't need auth (add exceptions as needed)
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon\\.ico|logo\\.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };
