@@ -24,16 +24,17 @@ export default function DeliveryPage() {
         description={agent?.phone ?? "Contact dispatch for assignments."}
         actions={<Badge variant="info">Shift · 6am - 2pm</Badge>}
       >
-        <Table>
-          <THead>
-            <tr>
-              <TH>Order</TH>
-              <TH>Customer</TH>
-              <TH>Quantity</TH>
-              <TH>Payment</TH>
-              <TH>Actions</TH>
-            </tr>
-          </THead>
+        <div className="w-full overflow-x-auto">
+          <Table>
+            <THead>
+              <tr>
+                <TH>Order</TH>
+                <TH>Customer</TH>
+                <TH>Quantity</TH>
+                <TH>Payment</TH>
+                <TH>Actions</TH>
+              </tr>
+            </THead>
           <TBody>
             {assignedOrders.length === 0 ? (
               <tr>
@@ -83,7 +84,8 @@ export default function DeliveryPage() {
               })
             )}
           </TBody>
-        </Table>
+          </Table>
+        </div>
       </Card>
     </div>
   );

@@ -68,7 +68,7 @@ export default function ProductionPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
             Production Workflow
@@ -89,7 +89,7 @@ export default function ProductionPage() {
       {loading ? (
         <div className="py-12 text-center text-sm text-zinc-500">Loading batches...</div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Phase 1: De-husking */}
           <Card
             title="Phase 1: De-husking"

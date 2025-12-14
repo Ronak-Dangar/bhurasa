@@ -64,7 +64,7 @@ export default async function FinancePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">Finance Snapshot</h2>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
@@ -74,7 +74,7 @@ export default async function FinancePage() {
         <AddExpenseForm />
       </div>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         <MetricCard
           label="Income (Delivered)"
           value={`₹${totalIncome.toLocaleString("en-IN")}`}
@@ -99,7 +99,7 @@ export default async function FinancePage() {
       </section>
 
       <Card title="Payables & Receivables" description="Track outstanding obligations and expected cash.">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="rounded-lg border border-rose-200 bg-rose-50/60 p-4 dark:border-rose-900/40 dark:bg-rose-950/30">
             <p className="text-sm font-medium text-rose-700 dark:text-rose-200">Total Payables</p>
             <p className="mt-2 text-2xl font-semibold text-rose-900 dark:text-rose-100">
@@ -119,9 +119,10 @@ export default async function FinancePage() {
 
       <LoanManagement loans={allLoans} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card title="Expense Ledger" description="Where every rupee went this week.">
-          <Table>
+          <div className="w-full overflow-x-auto">
+            <Table>
             <THead>
               <tr>
                 <TH>Date</TH>
@@ -148,7 +149,8 @@ export default async function FinancePage() {
                 </tr>
               ))}
             </TBody>
-          </Table>
+            </Table>
+          </div>
         </Card>
 
         <Card title="Cost of Goods Sold (COGS)" description="Dynamic profitability breakdown per SKU.">

@@ -56,6 +56,11 @@ export default function LoginPage() {
                   colors: {
                     brand: "rgb(16 185 129)",
                     brandAccent: "rgb(5 150 105)",
+                    // FORCE VISIBILITY: Hardcode these to ensure text is never invisible
+                    inputText: "#18181b", // Zinc-900 (Black-ish)
+                    inputBackground: "#ffffff", // White
+                    inputBorder: "#e4e4e7", // Zinc-200
+                    inputPlaceholder: "#a1a1aa", // Zinc-400
                   },
                   radii: {
                     buttonBorderRadius: "0.5rem",
@@ -66,7 +71,8 @@ export default function LoginPage() {
               className: {
                 container: "w-full",
                 button: "w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-500 transition",
-                input: "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
+                // Removed 'dark:' classes from input to prevent conflicts. It will now always be White bg with Black text.
+                input: "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200",
                 label: "block text-sm font-medium text-zinc-900 dark:text-zinc-100 mb-1",
               },
             }}

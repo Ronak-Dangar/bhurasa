@@ -24,7 +24,7 @@ export default async function InventoryPage() {
 
   return (
     <InventoryClientWrappers>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
             Inventory Management
@@ -42,7 +42,7 @@ export default async function InventoryPage() {
         </Link>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {Object.entries(grouped).map(([type, items]) => {
           const totalValue = items.reduce((acc, item) => acc + item.avg_cost * item.stock_level, 0);
           const lowCount = items.filter((item) => item.stock_level < item.low_stock_threshold).length;
@@ -82,8 +82,9 @@ export default async function InventoryPage() {
       </div>
 
       <Card title="Detailed View" description="Review stock thresholds and reorder actions.">
-        <Table>
-          <THead>
+        <div className="w-full overflow-x-auto">
+          <Table>
+            <THead>
             <tr>
               <TH>Item</TH>
               <TH>Type</TH>
@@ -139,7 +140,8 @@ export default async function InventoryPage() {
               );
             })}
           </TBody>
-        </Table>
+          </Table>
+        </div>
       </Card>
 
       <Card title="Reorder Suggestions" description="Trigger procurement before operations stall.">

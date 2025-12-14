@@ -58,7 +58,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6">
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           label="Net Profit (30d)"
           value={`₹${netProfit.toLocaleString("en-IN")}`}
@@ -89,7 +89,7 @@ export default async function Home() {
         />
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-5">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <Card className="lg:col-span-3" title="Pipeline Alerts" description="Prioritise these tasks to retain trust." actions={<Badge variant="info">Live</Badge>}>
           <div className="space-y-6">
             <AlertColumn title="Nurture" alerts={nurtureAlerts} />
@@ -112,12 +112,13 @@ export default async function Home() {
         </Card>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card
           title="Production Timeline"
           description="Track batches from groundnut to bottle."
         >
-          <Table>
+          <div className="w-full overflow-x-auto">
+            <Table>
             <THead>
               <tr>
                 <TH>Batch</TH>
@@ -149,10 +150,12 @@ export default async function Home() {
               ))}
             </TBody>
           </Table>
+          </div>
         </Card>
 
         <Card title="Upcoming Refills" description="Stay ahead of customer consumption cycles.">
-          <Table>
+          <div className="w-full overflow-x-auto">
+            <Table>
             <THead>
               <tr>
                 <TH>Customer</TH>
@@ -179,6 +182,7 @@ export default async function Home() {
               ))}
             </TBody>
           </Table>
+          </div>
         </Card>
       </section>
     </div>

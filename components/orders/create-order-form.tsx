@@ -272,7 +272,7 @@ export function CreateOrderForm() {
   return (
     <div className="space-y-6">
       {/* Top Section: Form + Operations Pulse */}
-      <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[3fr_2fr]">
         <Card
           title={editingOrderId ? "Edit Order" : "Raise New Order"}
           description={editingOrderId ? "Update order details and save changes." : "Capture customer request and reserve inventory."}
@@ -654,7 +654,7 @@ export function CreateOrderForm() {
               <h4 className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 Order Backlog
               </h4>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {/* Prepaid Pending */}
                 <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/40 dark:bg-emerald-950/20">
                   <div className="flex items-center gap-2">

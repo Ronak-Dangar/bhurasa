@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1763069565217,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765702839809,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,18 +23,19 @@\n         title={agent ? `${agent.name}` : \"Delivery Agent\"}\r\n         description={agent?.phone ?? \"Contact dispatch for assignments.\"}\r\n         actions={<Badge variant=\"info\">Shift · 6am - 2pm</Badge>}\r\n       >\r\n-        <Table>\r\n-          <THead>\r\n-            <tr>\r\n-              <TH>Order</TH>\r\n-              <TH>Customer</TH>\r\n-              <TH>Quantity</TH>\r\n-              <TH>Payment</TH>\r\n-              <TH>Actions</TH>\r\n-            </tr>\r\n-          </THead>\r\n+        <div className=\"w-full overflow-x-auto\">\r\n+          <Table>\r\n+            <THead>\r\n+              <tr>\r\n+                <TH>Order</TH>\r\n+                <TH>Customer</TH>\r\n+                <TH>Quantity</TH>\r\n+                <TH>Payment</TH>\r\n+                <TH>Actions</TH>\r\n+              </tr>\r\n+            </THead>\r\n           <TBody>\r\n             {assignedOrders.length === 0 ? (\r\n               <tr>\r\n                 <TD colSpan={5}>No orders assigned.</TD>\r\n@@ -82,9 +83,10 @@\n                 );\r\n               })\r\n             )}\r\n           </TBody>\r\n-        </Table>\r\n+          </Table>\r\n+        </div>\r\n       </Card>\r\n     </div>\r\n   );\r\n }\r\n"
                 }
             ],
             "date": 1763069565217,
