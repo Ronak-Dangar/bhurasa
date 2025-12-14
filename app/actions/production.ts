@@ -135,6 +135,18 @@ async function updatePhasedInventory(
             reason: `Production: Batch ${batch.batch_code} - Dehusking (produced)`,
           });
       }
+
+      // Credit husk (byproduct from dehusking)
+      const huskItem = inventoryItems?.find((i: any) => i.item_name === "Husk");
+      if (phaseData.output_husk_kg && huskItem) {
+        await supabase
+          .from("stock_movements")
+          .insert({
+            item_id: huskItem.id,
+            quantity_change: phaseData.output_husk_kg,
+            reason: `Production: Batch ${batch.batch_code} - Dehusking (husk byproduct)`,
+          });
+      }
     } else if (completedPhase === "pressing") {
       // Phase 2: Peanuts → Bulk Oil + Oilcake + Husk
       // Use stock_movements audit trail instead of direct updates

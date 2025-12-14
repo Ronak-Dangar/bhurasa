@@ -137,14 +137,19 @@ export async function middleware(request: NextRequest) {
   // ROLE-BASED ACCESS CONTROL
   // ─────────────────────────────────────────────────────────────
 
+  // DEBUG: Log User ID
+  console.log("Middleware: User ID found:", user.id);
+
   // Create service role client for profile lookup (bypasses RLS)
+  // NOTE: No cookies configuration - this ensures the Service Role Key is used
+  // instead of the user's session token, allowing it to bypass RLS policies
   const supabaseAdmin = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll();
+          return [];
         },
         setAll() {
           // No-op for admin client
@@ -153,14 +158,23 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: profile } = await supabaseAdmin
+  const { data: profile, error: profileError } = await supabaseAdmin
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
 
+  // DEBUG: Log Fetch Result
+  if (profileError) {
+    console.error("Middleware: Profile Fetch Error:", profileError);
+  }
+  console.log("Middleware: Profile Data:", profile);
+
   // Default to delivery_agent if profile doesn't exist
   const userRole = profile?.role || "delivery_agent";
+
+  // DEBUG: Log Resolved Role
+  console.log("Middleware: Resolved Role:", userRole);
 
   // Admin-only routes
   const adminRoutes = ["/", "/finance", "/production", "/inventory", "/orders"];

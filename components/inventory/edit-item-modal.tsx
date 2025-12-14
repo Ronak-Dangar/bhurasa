@@ -12,6 +12,7 @@ interface EditItemModalProps {
     stock_level: number;
     unit: string;
     avg_cost: number;
+    selling_price?: number;
     low_stock_threshold: number;
   };
   onClose: () => void;
@@ -127,25 +128,48 @@ export function EditItemModal({ item, onClose }: EditItemModalProps) {
                 required
                 className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
               />
+              <p className="mt-1 text-xs text-zinc-500">
+                Weighted average from purchases
+              </p>
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Low Stock Threshold
-            </label>
-            <input
-              type="number"
-              name="low_stock_threshold"
-              step="0.1"
-              min="0"
-              defaultValue={item.low_stock_threshold}
-              required
-              className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
-            />
-            <p className="mt-1 text-xs text-zinc-500">
-              Alert when stock falls below this level
-            </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                Selling Price (₹)
+              </label>
+              <input
+                type="number"
+                name="selling_price"
+                step="0.01"
+                min="0"
+                defaultValue={item.selling_price || 0}
+                required
+                className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              />
+              <p className="mt-1 text-xs text-zinc-500">
+                Default price for orders (editable)
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                Low Stock Threshold
+              </label>
+              <input
+                type="number"
+                name="low_stock_threshold"
+                step="0.1"
+                min="0"
+                defaultValue={item.low_stock_threshold}
+                required
+                className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              />
+              <p className="mt-1 text-xs text-zinc-500">
+                Alert when stock falls below this level
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-4">

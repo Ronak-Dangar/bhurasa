@@ -75,10 +75,10 @@ export async function createBottlingRun(formData: FormData) {
         finishedGood = findItem("1l bottle oil") || findItem("finished 1l");
       } else if (line.sku === "5L Tin") {
         emptyContainer = findItem("5l tin") || findItem("empty 5l");
-        finishedGood = findItem("5l tin oil") || findItem("finished 5l");
+        finishedGood = inventoryItems.find((item: any) => item.item_name === "5L Tin Oil") || findItem("5l tin oil") || findItem("finished 5l");
       } else if (line.sku === "15L Tin") {
         emptyContainer = findItem("15l tin") || findItem("empty 15l");
-        finishedGood = findItem("15l tin oil") || findItem("finished 15l");
+        finishedGood = inventoryItems.find((item: any) => item.item_name === "15L Tin Oil") || findItem("15l tin oil") || findItem("finished 15l");
       }
 
       // Validate inventory items exist

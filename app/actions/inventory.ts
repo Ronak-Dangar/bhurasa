@@ -11,6 +11,7 @@ export async function updateInventoryItem(formData: FormData) {
     item_name: formData.get("item_name") as string,
     low_stock_threshold: parseFloat(formData.get("low_stock_threshold") as string),
     avg_cost: parseFloat(formData.get("avg_cost") as string),
+    selling_price: parseFloat(formData.get("selling_price") as string),
   };
 
   const { error } = await supabase
@@ -23,6 +24,7 @@ export async function updateInventoryItem(formData: FormData) {
   }
 
   revalidatePath("/inventory");
+  revalidatePath("/orders/new"); // Refresh order form if open
   return { success: true };
 }
 
